@@ -20,4 +20,7 @@ yarn-error.log*
 *.sln
 *.sw*
 
-components
+*IpTimeline.vue
+*WeatherTimeline.vue
+Skeleton.vue
+*Sidebar.vue
