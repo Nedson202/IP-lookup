@@ -1,27 +1,35 @@
 import ipApi from 'ipapi.co';
 import https from 'https';
+import dotenv from 'dotenv';
 import Twitter from 'twitter';
 import woeid from '../model/woeid';
 
+dotenv.config();
+
 const twitterClient = new Twitter({
-  consumer_key: 'R62B9QjwvTBY095RY7SM0tAhK',
-  consumer_secret: 'JLTmL6COGZPn52JTHTzqRF73sv1hWiUW8R5eaTvRGCtVJNpeqs',
-  access_token_key: '2528849026-cwGfyD5glbeGwD6zegTW5c5rX6L3cdwj3VEHZQO',
-  access_token_secret: '3oyJlztufuZXgaNOZO6RXUypOdaoTOr3Sl10qZJhUMeeE'
+  consumer_key: process.env.consumer_key,
+  consumer_secret: process.env.consumer_secret,
+  access_token_key: process.env.access_token_key,
+  access_token_secret: process.env.access_token_secret
 });
 
-const params = {
-  screen_name: 'nodejs',
-};
+const params = {};
 
 class IpController {
   static async getIpData(req, res) {
-    const IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let IPs = req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+
+    if (IPs.indexOf(":") !== -1) {
+        IPs = IPs.split(":")[IPs.split(":").length - 1]
+    }
 
     const ipResponse = await new Promise((resolve, reject) => {
       ipApi.location((res) => {
         resolve(res)
-      }, '41.215.245.118');
+      }, IPs);
     })
     return ipResponse;
   }
@@ -62,25 +70,29 @@ class IpController {
   }
 
   static async getTrends(req, res) {
-    const ipResponse = await IpController.getIpData(req, res);
-    const { city } = ipResponse;
-    const placeId = woeid.find(earthId => earthId.name === city);
-    params.id = placeId.woeid;
+    try {
+      const ipResponse = await IpController.getIpData(req, res);
+      const { city } = ipResponse;
+      const placeId = woeid.find(earthId => earthId.name === city);
+      params.id = placeId.woeid;
 
-    const trends = await new Promise((resolve, reject) => {
-      twitterClient.get('trends/place', params, function(error, response) {
-        if (error) {
-          reject(error);
-        }
-        resolve(response)
+      const trends = await new Promise((resolve, reject) => {
+        twitterClient.get('trends/place', params, function(error, response) {
+          if (error) {
+            reject(error);
+          }
+          resolve(response)
+        });
       });
-    });
 
-    return res.status(200).json({
-      error: false,
-      message: 'Twitter trends retrieved successfully',
-      data: trends
-    });
+      return res.status(200).json({
+        error: false,
+        message: 'Twitter trends retrieved successfully',
+        data: trends[0]
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
