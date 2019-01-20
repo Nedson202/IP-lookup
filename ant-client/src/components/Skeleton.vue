@@ -1,5 +1,5 @@
 <template>
-  <a-skeleton active />
+  <a-skeleton rows="7" active />
 </template>
 
 <script>

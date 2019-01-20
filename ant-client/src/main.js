@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import {
   Button, Layout, Menu, Icon, Skeleton, Timeline,
-  Row, Col, Card
+  Row, Col, Card, Input
 } from 'ant-design-vue';
-import App from './App.vue'
+import LinkPrevue from 'link-prevue'
+import App from './App'
+import router from './router'
 
 Vue.use(Button)
 Vue.use(Layout)
@@ -14,9 +16,12 @@ Vue.use(Timeline)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)
+Vue.use(Input)
+Vue.component(LinkPrevue.name, LinkPrevue)
 
 Vue.config.productionTip = false
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  router,
+  render: createElement => createElement(App)
+}).$mount('#app');
