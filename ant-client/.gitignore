@@ -19,8 +19,3 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
-
-*IpTimeline.vue
-*WeatherTimeline.vue
-Skeleton.vue
-*Sidebar.vue
