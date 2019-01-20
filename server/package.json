@@ -1,0 +1,26 @@
+{
+  "name": "vue-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-server": "DEBUG=log nodemon app.js --exec babel-node --presets env,stage-2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "body-parser": "^1.18.3",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "ipapi.co": "^0.2.3",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.9",
+    "twitter": "^1.7.1"
+  }
+}
