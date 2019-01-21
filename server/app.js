@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import debug from 'debug';
+import requestLogger from 'morgan';
 import cors from 'cors';
 import routes from './routes/index';
 
@@ -9,6 +10,7 @@ const logger = debug('log');
 
 const port = 4000;
 app.use(cors());
+app.use(requestLogger('combined'))
 
 // parse incoming requests data
 app.use(bodyParser.json());
