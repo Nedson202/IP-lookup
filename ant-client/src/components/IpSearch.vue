@@ -30,17 +30,26 @@ export default {
     }
   },
   props: {
-      searchingIp: {
-        type: Boolean,
-        required: true
-      }
+    searchingIp: {
+      type: Boolean,
+      required: true
+    }
   },
   methods: {
     handleIpChange (event) {
       this.ip = event.target.value
     },
     onSearch () {
+      if (!this.ip.trim()) {
+        return this.openNotificationWithIcon('error')
+      }
       this.$emit('ipChange', { ip: this.ip })
+    },
+    openNotificationWithIcon (type) {
+      this.$notification[type]({
+        message: 'Lookup',
+        description: 'IP address cannot be empty',
+      });
     },
   },
 }

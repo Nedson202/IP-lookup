@@ -30,8 +30,6 @@ class IpController {
 
     const lookUpIp = ipFromQuery || myIPs;
 
-    console.log(myIPs, ipFromQuery, lookUpIp);
-
     const ipResponse = await new Promise((resolve, reject) => {
       ipApi.location((res) => {
         resolve(res);
@@ -41,12 +39,28 @@ class IpController {
   }
 
   static async returnIpData(req, res) {
-    const ipResponse = await IpController.getIpData(req, res);
-    return res.status(200).json({
-      error: false,
-      message: 'Ip lookup completed successfully',
-      data: ipResponse
-    });
+    try {
+      const ipResponse = await IpController.getIpData(req, res);
+      if (ipResponse.error) {
+        return res.status(400).json({
+          error: false,
+          data: ipResponse
+        });
+      }
+      return res.status(200).json({
+        error: false,
+        message: 'Ip lookup completed successfully',
+        data: ipResponse
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: 'Ip lookup failed',
+        data: {
+          reason: 'IP address is invalid'
+        }
+      });
+    }
   }
 
   static async getWeatherData(req, res) {
@@ -91,7 +105,6 @@ class IpController {
           }
           const { trends } = response[0];
           const slicedTrends = trends.splice(from, size);
-          console.log(slicedTrends.length)
           response[0].trends = slicedTrends
           resolve(response)
         });

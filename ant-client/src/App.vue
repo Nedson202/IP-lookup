@@ -5,12 +5,12 @@
       <a-menu
         theme="dark"
         mode="horizontal"
-        :defaultSelectedKeys="['1']"
+        :defaultSelectedKeys="[selectedKeys]"
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1" id="desk-menu">
           IP Lookup
-          <router-link to="/"></router-link>
+          <router-link :to="{ name: 'LookUp'}"></router-link>
         </a-menu-item>
         <a-menu-item key="2" id="desk-menu">
           Twitter Trends
@@ -24,6 +24,32 @@
     </a-layout-footer>
   </a-layout>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedKeys: '0'
+    }
+  },
+  created() {
+    this.calculateCurentPage()
+  },
+  watch: {
+    '$route': 'calculateCurentPage'
+  },
+  methods: {
+    calculateCurentPage() {
+      const route = window.location.href.split('/#')[1];
+      const routes = {
+        '/': '1',
+        '/twitter-trends': '2'
+      }
+      this.selectedKeys = routes[route]
+    }
+  }
+}
+</script>
 
 <style>
 #components-layout-demo-fixed .logo {

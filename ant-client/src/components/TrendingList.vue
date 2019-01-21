@@ -1,6 +1,6 @@
 <template>
   <a-layout-content class="layout-content" :style="{ padding: '0 50px', marginTop: '64px', }">
-    <h1 :style="{ padding: '24px' }">Top twitter trends in your location: {{ locations[0].name }} </h1>
+    <h1 :style="{ padding: '24px' }">Top twitter trends in your location: {{ !trendLoading ? locations[0].name : '...' }} </h1>
     <template v-if="trendLoading">
       <TrendingSkeleton/>
     </template>
