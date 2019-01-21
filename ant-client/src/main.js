@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {
   Button, Layout, Menu, Icon, Skeleton, Timeline,
-  Row, Col, Card, Input, Pagination, Drawer
+  Row, Col, Card, Input, Pagination, Drawer, notification
 } from 'ant-design-vue';
 import LinkPrevue from 'link-prevue'
 import App from './App'
@@ -19,6 +19,7 @@ Vue.use(Card)
 Vue.use(Input)
 Vue.use(Pagination)
 Vue.use(Drawer)
+Vue.prototype.$notification = notification
 Vue.component(LinkPrevue.name, LinkPrevue)
 
 Vue.config.productionTip = false

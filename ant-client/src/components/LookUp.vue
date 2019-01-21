@@ -57,8 +57,22 @@ export default {
 
         this.ipLookupLoading = false
         this.searchingIp = false
+
+        if (ip) {
+          this.$notification['success']({
+            message: 'Lookup',
+            description: 'IP address lookup completed successfully',
+          });
+        }
       })
-      .catch(error => error)
+      .catch((error) => {
+        const { data } = error.response.data;
+        this.searchingIp = false
+        this.$notification['error']({
+          message: 'Lookup',
+          description: data.reason,
+        });
+      })
     },
     runWeatherLookup() {
       axios.get('https://3f9aa697.ngrok.io/ip/getWeatherData')
