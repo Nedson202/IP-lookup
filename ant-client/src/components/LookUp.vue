@@ -1,7 +1,7 @@
 <template>
-  <a-layout-content :style="{ padding: '0 50px', marginTop: '64px', }">
+  <a-layout-content class="layout-content" :style="{ padding: '0 50px', marginTop: '64px', }">
     <div class="ip-search">
-      Run IP lookup: <ip-search />
+      <ip-search @ipChange="handleIpLookup" :searchingIp="searchingIp" />
     </div>
     <div class="lookup-grid" :style="{ background: '#fff', padding: '24px', marginTop: '50px', minHeight: '75vh' }">
       <div class="lookup-grid-child" :style="{ paddingLeft: '50px'}">
@@ -33,6 +33,7 @@ export default {
       weatherLookupLoading: true,
       ipLookup: [],
       weatherLookup: [],
+      searchingIp: false
     }
   },
   components: {
@@ -42,48 +43,63 @@ export default {
     IpSearch
   },
   created() {
-    this.runIpLookup()
-    this.runWeatherLookup()
+    this.runIpLookup(false)
+    this.runWeatherLookup(false)
   },
    watch: {
     '$route': ['runIpLookup', 'runWeatherLookup'],
   },
   methods: {
-    runIpLookup() {
-      axios.get('https://afbbdfb2.ngrok.io/ip/getIpData')
+    runIpLookup({ ip }) {
+      axios.get(`https://3f9aa697.ngrok.io/ip/getIpData?${ip && 'ip'}=${ip}`)
       .then(resp => {
         this.ipLookup = resp.data.data
+
         this.ipLookupLoading = false
+        this.searchingIp = false
       })
       .catch(error => error)
     },
     runWeatherLookup() {
-      axios.get('https://afbbdfb2.ngrok.io/ip/getWeatherData')
+      axios.get('https://3f9aa697.ngrok.io/ip/getWeatherData')
       .then(resp => {
         this.weatherLookup = resp.data.data
         this.weatherLookupLoading = false
       })
       .catch(error => error)
+    },
+    handleIpLookup(payload) {
+      this.searchingIp = true;
+      this.runIpLookup(payload)
     }
   }
 }
 </script>
 
 <style>
-#components-layout-demo-fixed .logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255,255,255,.2);
-  margin: 16px 24px 16px 0;
-  float: left;
-}
-
 .ip-search {
-  width: 40%;
+  margin-top: 40px;
 }
 
-.input {
-  padding: 20px;
+.search-text {
+  font-size: 25px;
+  /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+}
+
+.ip-lookup-input {
+  width: 40%;
+  height: 42px;
+  bottom: none;
+  font-size: 17px;
+  border: none;
+  border-radius: 10px;
+  padding-left: 15px;
+}
+
+input:focus {
+  outline: 0;
+  box-shadow: none;
+  border-color: transparent;
 }
 
 .lookup-grid-child {
@@ -93,8 +109,12 @@ export default {
 }
 
 @media screen and (max-width: 560px) {
+  .layout-content {
+    padding: 0 20px !important;
+  }
+
   .lookup-grid {
-    padding: 0 30px !important;
+    padding: 0 20px !important;
   }
 
   .lookup-grid-child {

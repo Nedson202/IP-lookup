@@ -1,6 +1,6 @@
 <template>
-  <a-layout-content :style="{ padding: '0 50px', marginTop: '64px', }">
-    <h1 :style="{ padding: '24px' }">Top twitter trends in Lagos</h1>
+  <a-layout-content class="layout-content" :style="{ padding: '0 50px', marginTop: '64px', }">
+    <h1 :style="{ padding: '24px' }">Top twitter trends in your location: {{ locations[0].name }} </h1>
     <template v-if="trendLoading">
       <TrendingSkeleton/>
     </template>
@@ -31,7 +31,8 @@ export default {
     return {
       trends: [],
       trendMeta: [],
-      trendLoading: true
+      trendLoading: true,
+      locations: []
     };
   },
   created() {
@@ -45,11 +46,12 @@ export default {
   },
   methods: {
     fetchTrends({ from, size }) {
-      axios.get(`https://afbbdfb2.ngrok.io/ip/getTrends?from=${from}&size=${size}`)
+      axios.get(`https://3f9aa697.ngrok.io/ip/getTrends?from=${from}&size=${size}`)
       .then(resp => {
-        const { trends } = resp.data.data;
+        const { trends, locations } = resp.data.data;
         this.trends = trends.sort((firstEl, nextEl) => nextEl.tweet_volume - firstEl.tweet_volume)
         this.trendLoading = false
+        this.locations = locations
       })
       .catch(error => error)
     },
@@ -69,7 +71,7 @@ export default {
 
 @media screen and (max-width: 560px) {
   .trend-grid {
-    padding: 0 30px !important;
+    padding: 0 !important;
   }
 
   .trend-grid {

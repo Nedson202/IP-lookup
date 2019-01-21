@@ -17,19 +17,25 @@ const params = {};
 
 class IpController {
   static async getIpData(req, res) {
-    let IPs = req.headers['x-forwarded-for'] ||
+    const { query } = req;
+    const { ip: ipFromQuery } = query;
+    let myIPs = req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 
-    if (IPs.indexOf(":") !== -1) {
-        IPs = IPs.split(":")[IPs.split(":").length - 1]
+    if (myIPs.indexOf(":") !== -1) {
+      myIPs = myIPs.split(":")[myIPs.split(":").length - 1];
     }
+
+    const lookUpIp = ipFromQuery || myIPs;
+
+    console.log(myIPs, ipFromQuery, lookUpIp);
 
     const ipResponse = await new Promise((resolve, reject) => {
       ipApi.location((res) => {
-        resolve(res)
-      }, IPs);
+        resolve(res);
+      }, lookUpIp);
     })
     return ipResponse;
   }

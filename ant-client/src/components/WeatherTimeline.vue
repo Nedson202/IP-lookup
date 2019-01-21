@@ -1,7 +1,7 @@
 <template>
   <a-timeline mode="alternate">
     <div style="paddingBottom: 30px">
-      <h2>Weather information for Lagos</h2>
+      <h2>Weather information for {{ weatherLookupData.timezone }}</h2>
     </div>
     <a-timeline-item><b>Summary:</b> {{ weatherLookupData.currently.summary }}</a-timeline-item>
     <a-timeline-item color="green"><b>Timezone:</b> {{ weatherLookupData.timezone }}</a-timeline-item>
