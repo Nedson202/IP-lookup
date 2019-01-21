@@ -10,6 +10,7 @@
             <TweetCard :trend="trend"/>
         </div>
       </div>
+      <div :style="{ textAlign: 'center', margin: '25px 0', position: 'relative' }"><Pagination @pageChange="changePage" /></div>
     </template>
   </a-layout-content>
 </template>
@@ -18,11 +19,13 @@
 import axios from 'axios';
 import TweetCard from "./TweetCard";
 import TrendingSkeleton from "./TrendingSkeleton";
+import Pagination from './Pagination'
 
 export default {
   components: {
     TweetCard,
-    TrendingSkeleton
+    TrendingSkeleton,
+    Pagination
   },
   data() {
     return {
@@ -32,20 +35,26 @@ export default {
     };
   },
   created() {
-    this.fetchTrends()
+    this.fetchTrends({
+      from: 0,
+      size: 12
+    })
   },
    watch: {
     '$route': 'fetchTrends'
   },
   methods: {
-    fetchTrends() {
-      axios.get('https://afbbdfb2.ngrok.io/ip/getTrends')
+    fetchTrends({ from, size }) {
+      axios.get(`https://afbbdfb2.ngrok.io/ip/getTrends?from=${from}&size=${size}`)
       .then(resp => {
         const { trends } = resp.data.data;
         this.trends = trends.sort((firstEl, nextEl) => nextEl.tweet_volume - firstEl.tweet_volume)
         this.trendLoading = false
       })
       .catch(error => error)
+    },
+    changePage(payload) {
+      this.fetchTrends(payload)
     }
   }
 };
