@@ -71,6 +71,8 @@ class IpController {
 
   static async getTrends(req, res) {
     try {
+      const { query } = req;
+      const { from, size } = query;
       const ipResponse = await IpController.getIpData(req, res);
       const { city } = ipResponse;
       const placeId = woeid.find(earthId => earthId.name === city);
@@ -81,6 +83,10 @@ class IpController {
           if (error) {
             reject(error);
           }
+          const { trends } = response[0];
+          const slicedTrends = trends.splice(from, size);
+          console.log(slicedTrends.length)
+          response[0].trends = slicedTrends
           resolve(response)
         });
       });

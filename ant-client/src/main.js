@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {
   Button, Layout, Menu, Icon, Skeleton, Timeline,
-  Row, Col, Card, Input
+  Row, Col, Card, Input, Pagination
 } from 'ant-design-vue';
 import LinkPrevue from 'link-prevue'
 import App from './App'
@@ -17,6 +17,7 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)
 Vue.use(Input)
+Vue.use(Pagination)
 Vue.component(LinkPrevue.name, LinkPrevue)
 
 Vue.config.productionTip = false
