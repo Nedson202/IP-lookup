@@ -1,4 +1,4 @@
-import ipApi from 'ipapi.co';
+import { lookup } from 'ipdata';
 import https from 'https';
 import dotenv from 'dotenv';
 import Twitter from 'twitter';
@@ -30,11 +30,7 @@ class IpController {
 
     const lookUpIp = ipFromQuery || myIPs;
 
-    const ipResponse = await new Promise((resolve, reject) => {
-      ipApi.location((res) => {
-        resolve(res);
-      }, lookUpIp);
-    })
+    const ipResponse = await lookup(lookUpIp, process.env.ip_data_key);
     return ipResponse;
   }
 
@@ -94,8 +90,19 @@ class IpController {
       const { query } = req;
       const { from, size } = query;
       const ipResponse = await IpController.getIpData(req, res);
-      const { city } = ipResponse;
-      const placeId = woeid.find(earthId => earthId.name === city);
+      const { city, time_zone } = ipResponse;
+      let country;
+      let placeId = woeid.find(earthId => earthId.name === city);
+      if (!placeId) {
+        country = time_zone.split('/')[1];
+        placeId = woeid.find(earthId => earthId.name === country);
+      }
+      if (!placeId) {
+        return res.status(404).json({
+          error: false,
+          message: `Unable to fetch trending tweets for ${city}`,
+        });
+      }
       params.id = placeId.woeid;
 
       const trends = await new Promise((resolve, reject) => {
@@ -116,7 +123,7 @@ class IpController {
         data: trends[0]
       });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   }
 }
