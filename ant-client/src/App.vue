@@ -1,7 +1,7 @@
 <template>
   <a-layout id="components-layout-demo-fixed" :style="{ minHeight: '100%' }">
     <a-layout-header :style="{ position: 'fixed', zIndex: 1, width: '100%' }">
-      <h1 class="logo">iLookup</h1>
+      <h1 class="logo">👀Lookup</h1>
       <a-menu
         theme="dark"
         mode="horizontal"
@@ -20,7 +20,7 @@
     </a-layout-header>
     <router-view></router-view>
     <a-layout-footer :style="{ textAlign: 'center' }">
-      Ant Design ©2018 Created by Ant UED
+      Trend Design ©{{new Date().getFullYear()}} by eight_wing
     </a-layout-footer>
   </a-layout>
 </template>
@@ -53,7 +53,7 @@ export default {
 
 <style>
 #components-layout-demo-fixed .logo {
-  width: 120px;
+  width: 150px;
   height: 31px;
   line-height: 31px;
   /* background: rgba(255,255,255,.2); */
