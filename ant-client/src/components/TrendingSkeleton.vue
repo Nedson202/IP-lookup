@@ -1,12 +1,10 @@
 <template>
   <div
     class="skeleton-grid"
-    :style="{ background: '#fff', padding: '24px', minHeight: '80vh' }"
+    :style="{ padding: '24px', minHeight: '80vh' }"
   >
-    <div  v-for="index in 12" :key="index">
-      <div>
-        <a-skeleton active />
-      </div>
+    <div :style="{ background: '#fff' }" v-for="index in 12" :key="index">
+      <a-skeleton active />
     </div>
   </div>
 </template>

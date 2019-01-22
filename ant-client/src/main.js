@@ -25,6 +25,6 @@ Vue.component(LinkPrevue.name, LinkPrevue)
 Vue.config.productionTip = false
 
 new Vue({
+  render: createElement => createElement(App),
   router,
-  render: createElement => createElement(App)
 }).$mount('#app');
