@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     fetchTrends({ from, size }) {
-      axios.get(`https://8073a973.ngrok.io/ip/getTrends?from=${from}&size=${size}`)
+      axios.get(`localhost:4000/ip/getTrends?from=${from}&size=${size}`)
       .then(resp => {
         const { trends, locations } = resp.data.data;
         this.trends = trends.sort((firstEl, nextEl) => nextEl.tweet_volume - firstEl.tweet_volume)

@@ -4,7 +4,6 @@ import debug from 'debug';
 import requestLogger from 'morgan';
 import cors from 'cors';
 import routes from './routes/index';
-import IpController from './controllers/IpData';
 
 const app = express();
 const logger = debug('log');
@@ -34,14 +33,8 @@ app.get('*', (req, res) => {
 
 
 setInterval(() => {
-  ((req) => {
-    const res = {
-      status: () => ({
-        json: () => {}
-      })
-    }
-    // IpController.healthChecker(req, res);
-    http.get(`http://localhost:4000/ip/healthCheck`, (resp) => {});
+  (() => {
+    http.get(`http://localhost:4000/ip/healthCheck`, () => {});
   })();
 }, 1000*60*10);
 

@@ -51,7 +51,8 @@ export default {
   },
   methods: {
     runIpLookup({ ip }) {
-      axios.get(`https://8073a973.ngrok.io/ip/getIpData?${ip && 'ip'}=${ip}`)
+      axios.get(`localhost:4000/ip/getIpData?${ip && 'ip'}=${ip}`)
+      // axios.get(`localhost:4000/ip/getIpData?${ip && 'ip'}=${ip}`)
       .then(resp => {
         this.ipLookup = resp.data.data
 
@@ -75,7 +76,7 @@ export default {
       })
     },
     runWeatherLookup() {
-      axios.get('https://8073a973.ngrok.io/ip/getWeatherData')
+      axios.get('localhost:4000/ip/getWeatherData')
       .then(resp => {
         this.weatherLookup = resp.data.data
         this.weatherLookupLoading = false
