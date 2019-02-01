@@ -3,7 +3,7 @@ import IpController from '../controllers/IpData';
 
 const router = Router();
 
-const { returnIpData, getWeatherData, getTrends } = IpController;
+const { returnIpData, getWeatherData, getTrends, healthChecker } = IpController;
 
 router.get(
   '/getIpData',
@@ -18,6 +18,11 @@ router.get(
 router.get(
   '/getTrends',
   getTrends
+);
+
+router.get(
+  '/healthCheck',
+  healthChecker
 );
 
 export default router;

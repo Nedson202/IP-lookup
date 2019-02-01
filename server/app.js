@@ -1,20 +1,17 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import http from 'http';
 import debug from 'debug';
 import requestLogger from 'morgan';
 import cors from 'cors';
 import routes from './routes/index';
+import IpController from './controllers/IpData';
 
 const app = express();
 const logger = debug('log');
 
 const port = 4000;
 app.use(cors());
-app.use(requestLogger('combined'))
-
-// parse incoming requests data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(requestLogger('combined'));
 
 app.use(routes);
 app.use((req, res, next) => {
@@ -24,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 app.listen(port, () => {
-  logger(`Server started on port: ${port}`)
+  logger(`Server started on port: ${port}`);
 });
 
 // setup a default catch-all route for undef-route
@@ -34,5 +31,18 @@ app.get('*', (req, res) => {
     error: true
   });
 });
+
+
+setInterval(() => {
+  ((req) => {
+    const res = {
+      status: () => ({
+        json: () => {}
+      })
+    }
+    // IpController.healthChecker(req, res);
+    http.get(`http://localhost:4000/ip/healthCheck`, (resp) => {});
+  })();
+}, 1000*60*10);
 
 export default app;

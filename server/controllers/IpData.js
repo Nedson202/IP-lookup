@@ -16,6 +16,13 @@ const twitterClient = new Twitter({
 const params = {};
 
 class IpController {
+  static async healthChecker(req, res) {
+    return res.status(200).json({
+      error: false,
+      message: 'Health check complete, server is active'
+    })
+  }
+
   static async getIpData(req, res) {
     const { query } = req;
     const { ip: ipFromQuery } = query;
