@@ -7,11 +7,12 @@
       <div class="lookup-grid-child" :style="{ paddingLeft: '50px'}">
         <div>
           <span v-if="ipLookupLoading"><Skeleton /></span>
-          <span v-else><IpTimeline :ipLookUpData=ipLookup /></span>
+          <span v-if="!ipLookupLoading && ipLookup.length !== 0"><IpTimeline :ipLookUpData=ipLookup /></span>
+          <h1  v-if="!ipLookupLoading && ipLookup.length === 0">An error occurred trying to retrieve you IP data</h1>
         </div>
         <div>
           <span v-if="weatherLookupLoading"><Skeleton /></span>
-          <span v-else><WeatherTimeline :weatherLookupData=weatherLookup /></span>
+          <span v-if="!weatherLookupLoading && weatherLookup.length !== 0"><WeatherTimeline :weatherLookupData=weatherLookup /></span>
         </div>
       </div>
     </div>
@@ -24,6 +25,7 @@ import Skeleton from './Skeleton'
 import IpTimeline from './IpTimeline'
 import WeatherTimeline from './WeatherTimeline'
 import IpSearch from './IpSearch'
+import { appUrl } from '../constants/constant'
 
 export default {
   data(){
@@ -51,7 +53,8 @@ export default {
   },
   methods: {
     runIpLookup({ ip }) {
-      axios.get(`https://8073a973.ngrok.io/ip/getIpData?${ip && 'ip'}=${ip}`)
+      // axios.get(`${appUrl}/ip/getIpData?${ip && 'ip'}=${ip}`)
+      axios.get(`/ip/getIpData?${ip && 'ip'}=${ip}`)
       .then(resp => {
         this.ipLookup = resp.data.data
 
@@ -68,6 +71,8 @@ export default {
       .catch((error) => {
         const { data } = error.response.data;
         this.searchingIp = false
+        this.ipLookupLoading = false
+
         this.$notification['error']({
           message: 'Lookup',
           description: data.reason,
@@ -75,12 +80,16 @@ export default {
       })
     },
     runWeatherLookup() {
-      axios.get('https://8073a973.ngrok.io/ip/getWeatherData')
+      // axios.get(`${appUrl}/ip/getWeatherData`)
+      axios.get(`/ip/getWeatherData`)
       .then(resp => {
         this.weatherLookup = resp.data.data
         this.weatherLookupLoading = false
       })
-      .catch(error => error)
+      .catch(error => {
+        this.weatherLookupLoading = false
+        return error
+      })
     },
     handleIpLookup(payload) {
       this.searchingIp = true;
