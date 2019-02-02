@@ -9,7 +9,7 @@
     <template v-else-if="trends.length !== 0">
       <div class="trend-grid" :style="{ padding: '24px', minHeight: '75vh' }">
         <div v-for="(trend, index) in trends" :key="index ">
-            <TweetCard :trend="trend"/>
+          <TweetCard :trend="trend"/>
         </div>
       </div>
       <div :style="{ textAlign: 'center', margin: '25px 0', position: 'relative' }"><Pagination @pageChange="changePage" /></div>
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     fetchTrends({ from, size }) {
-      axios.get(`https://8073a973.ngrok.io/ip/getTrends?from=${from}&size=${size}`)
+      axios.get(`/ip/getTrends?from=${from}&size=${size}`)
       .then(resp => {
         const { trends, locations } = resp.data.data;
         this.trends = trends.sort((firstEl, nextEl) => nextEl.tweet_volume - firstEl.tweet_volume)
