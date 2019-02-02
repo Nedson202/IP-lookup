@@ -23,7 +23,6 @@
         </span>
       </p>
     </a-card>
-    <!-- <link-prevue url="https://vuejs.org/" cardWidth="250px"></link-prevue> -->
   </div>
 </template>
 

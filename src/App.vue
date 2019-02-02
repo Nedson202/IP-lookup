@@ -1,7 +1,7 @@
 <template>
   <a-layout id="components-layout-demo-fixed" :style="{ minHeight: '100%' }">
     <a-layout-header :style="{ position: 'fixed', zIndex: 1, width: '100%' }">
-      <h1 class="logo">👀Lookup</h1>
+      <h1 class="logo">IP-Lookup</h1>
       <a-menu
         theme="dark"
         mode="horizontal"
@@ -56,7 +56,6 @@ export default {
   width: 150px;
   height: 31px;
   line-height: 31px;
-  /* background: rgba(255,255,255,.2); */
   margin: 16px 24px 16px 0;
   float: left;
   color: #fff;

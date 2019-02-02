@@ -23,7 +23,7 @@ class IpController {
     })
   }
 
-  static async getIpData(req, res) {
+  static async getIpData(req) {
     const { query } = req;
     const { ip: ipFromQuery } = query;
     let myIPs = req.headers['x-forwarded-for'] ||
@@ -56,7 +56,7 @@ class IpController {
         data: ipResponse
       });
     } catch (error) {
-      return res.status(500).json({
+      return res.status(400).json({
         error: true,
         message: 'Ip lookup failed',
         data: {
@@ -67,29 +67,37 @@ class IpController {
   }
 
   static async getWeatherData(req, res) {
-    const ipResponse = await IpController.getIpData(req, res);
-    const { latitude, longitude } = ipResponse;
-    const weatherData = await new Promise((resolve, reject) => {
-      https.get(`https://api.darksky.net/forecast/3cd49b356a32eb606332aa01439fd4c0/${latitude},${longitude}`, (resp) => {
-        resp.setEncoding("utf8");
-        let body = "";
-        resp.on("data", data => {
-          body += data;
-        });
-        resp.on("end", () => {
-          body = JSON.parse(body);
-          delete(body.minutely)
-          delete(body.hourly)
-          delete(body.daily)
-          resolve(body);
+    try {
+      const ipResponse = await IpController.getIpData(req, res);
+      const { latitude, longitude } = ipResponse;
+      const weatherData = await new Promise((resolve) => {
+        https.get(`https://api.darksky.net/forecast/${process.env.DARKSKY_API}/${latitude},${longitude}`, (resp) => {
+          resp.setEncoding("utf8");
+          let body = "";
+          resp.on("data", data => {
+            body += data;
+          });
+          resp.on("end", () => {
+            body = JSON.parse(body);
+            delete(body.minutely)
+            delete(body.hourly)
+            delete(body.daily)
+            resolve(body);
+          });
         });
       });
-    });
-    return res.status(200).json({
-      error: false,
-      message: 'Weather information completed successfully',
-      data: weatherData
-    });
+      return res.status(200).json({
+        error: false,
+        message: 'Weather information completed successfully',
+        data: weatherData
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: 'Weather lookup failed',
+        data: error
+      });
+    }
   }
 
   static async getTrends(req, res) {
@@ -97,6 +105,7 @@ class IpController {
       const { query } = req;
       const { from, size } = query;
       const ipResponse = await IpController.getIpData(req, res);
+
       const { city, time_zone } = ipResponse;
       let country;
       let placeId = woeid.find(earthId => earthId.name === city);
@@ -113,14 +122,16 @@ class IpController {
       params.id = placeId.woeid;
 
       const trends = await new Promise((resolve, reject) => {
-        twitterClient.get('trends/place', params, function(error, response) {
+        twitterClient.get('trends/place', params, (error, response) => {
+          if (response[0]) {
+            const { trends } = response[0];
+            const slicedTrends = trends.splice(from, size);
+            response[0].trends = slicedTrends
+            resolve(response)
+          }
           if (error) {
             reject(error);
           }
-          const { trends } = response[0];
-          const slicedTrends = trends.splice(from, size);
-          response[0].trends = slicedTrends
-          resolve(response)
         });
       });
 
@@ -130,7 +141,11 @@ class IpController {
         data: trends[0]
       });
     } catch (error) {
-      return error;
+      return res.status(400).json({
+        error: false,
+        message: 'Unable to retrieve twitter trends',
+        data: error
+      });
     }
   }
 }
