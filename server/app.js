@@ -40,8 +40,8 @@ const httpProtocol = process.env.NODE_ENV.match('development') ? http : https;
 
 setInterval(() => {
   (() => {
-    httpProtocol.get(`${appUrl}/ip/healthCheck`, () => {});
+    httpProtocol.get(`${appUrl}/ip/healthCheck`, () => { });
   })();
-}, 1000 * 10 * 60);
+}, 1000 * 10 * 60 * 24);
 
 export default app;
